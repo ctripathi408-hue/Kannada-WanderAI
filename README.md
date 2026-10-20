@@ -75,7 +75,9 @@ User ──► Web UI (preferences input)
 ## 🚀 Getting Started
 
 ### Use the live app
-
+Use Test credentials
+email-testcredentials330@gmail.com
+password-demo@1234
 Open https://karnataka-wanderai-personalized-travel-transit-pl.ai.studio/
 
 ### Run locally
