@@ -1,0 +1,6 @@
+{
+  "name": "Karnataka WanderAI - Personalized Travel & Transit Planner",
+  "description": "AI-powered travel planner for Karnataka featuring personalized itineraries, transit options, and local hotel recommendations.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,69 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Global default deny safety net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    // Public shared trips collection (accessible with valid ID)
+    match /sharedTrips/{tripId} {
+      allow get: if isValidId(tripId);
+      allow list: if false;
+      allow create: if isValidId(tripId)
+                    && request.resource.data.id == tripId
+                    && request.resource.data.title is string
+                    && request.resource.data.title.size() <= 200;
+      allow update, delete: if false;
+    }
+
+    // User profile collection
+    match /users/{userId} {
+      allow get: if isOwner(userId);
+      allow create, update: if isOwner(userId);
+      allow delete: if false;
+
+      // Saved itineraries subcollection
+      match /itineraries/{itineraryId} {
+        allow read, write: if isOwner(userId);
+      }
+
+      // Chat sessions subcollection
+      match /chatSessions/{sessionId} {
+        allow get: if isOwner(userId) && isValidId(sessionId);
+        allow list: if isOwner(userId);
+        allow create: if isOwner(userId) && isValidId(sessionId)
+                      && request.resource.data.userId == userId;
+        allow update: if isOwner(userId) && isValidId(sessionId)
+                      && request.resource.data.userId == userId;
+        allow delete: if isOwner(userId) && isValidId(sessionId);
+
+        // Chat messages within a session
+        match /messages/{messageId} {
+          allow get: if isOwner(userId) && isValidId(sessionId) && isValidId(messageId);
+          allow list: if isOwner(userId) && isValidId(sessionId);
+          allow create: if isOwner(userId) && isValidId(sessionId) && isValidId(messageId)
+                        && request.resource.data.userId == userId
+                        && request.resource.data.content is string
+                        && request.resource.data.content.size() <= 10000;
+          allow update: if false;
+          allow delete: if isOwner(userId) && isValidId(sessionId) && isValidId(messageId);
+        }
+      }
+    }
+  }
+}

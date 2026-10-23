@@ -1,0 +1,101 @@
+{
+  "entities": {
+    "User": {
+      "title": "User Profile",
+      "description": "User account profile for authenticated travelers",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "maxLength": 128 },
+        "displayName": { "type": "string", "maxLength": 100 },
+        "email": { "type": "string", "maxLength": 150 },
+        "photoURL": { "type": "string", "maxLength": 500 },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["uid", "email"]
+    },
+    "SavedItinerary": {
+      "title": "Saved Travel Itinerary",
+      "description": "Persisted customized Karnataka itinerary",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "title": { "type": "string", "maxLength": 200 },
+        "summary": { "type": "string", "maxLength": 2000 },
+        "durationDays": { "type": "number" },
+        "startingCity": { "type": "string", "maxLength": 100 },
+        "routeStops": { "type": "array" },
+        "estimatedBudgetInr": { "type": "object" },
+        "days": { "type": "array" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "userId", "title", "durationDays", "days"]
+    },
+    "ChatSession": {
+      "title": "Gemini Chat Session",
+      "description": "Multi-turn chat session with specialized AI travel personas",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "title": { "type": "string", "maxLength": 200 },
+        "personaRole": { "type": "string", "maxLength": 100 },
+        "modelUsed": { "type": "string", "maxLength": 50 },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "userId", "title"]
+    },
+    "ChatMessage": {
+      "title": "Chat Message",
+      "description": "Individual message in a multi-turn chat thread",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "sessionId": { "type": "string", "maxLength": 128 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "role": { "type": "string", "enum": ["user", "model", "system"] },
+        "content": { "type": "string", "maxLength": 10000 },
+        "timestamp": { "type": "string" }
+      },
+      "required": ["id", "sessionId", "userId", "role", "content"]
+    },
+    "SharedTrip": {
+      "title": "Shared Trip Itinerary",
+      "description": "Publicly shared itinerary accessible via unique trip ID",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "title": { "type": "string", "maxLength": 200 },
+        "durationDays": { "type": "number" },
+        "destinations": { "type": "array" },
+        "plan": { "type": "object" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "title", "durationDays", "plan"]
+    }
+  },
+  "firestore": {
+    "/sharedTrips/{tripId}": {
+      "schema": { "$ref": "SharedTrip" },
+      "description": "Stores shared itineraries accessible by unique link"
+    },
+    "/users/{userId}": {
+      "schema": { "$ref": "User" },
+      "description": "Stores user profile information"
+    },
+    "/users/{userId}/itineraries/{itineraryId}": {
+      "schema": { "$ref": "SavedItinerary" },
+      "description": "Stores saved itineraries for each traveler"
+    },
+    "/users/{userId}/chatSessions/{sessionId}": {
+      "schema": { "$ref": "ChatSession" },
+      "description": "Stores multi-turn chat sessions for each user"
+    },
+    "/users/{userId}/chatSessions/{sessionId}/messages/{messageId}": {
+      "schema": { "$ref": "ChatMessage" },
+      "description": "Stores message history within a chat session"
+    }
+  }
+}
