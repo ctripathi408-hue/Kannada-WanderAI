@@ -32,7 +32,7 @@ import {
   X,
   AlertCircle
 } from 'lucide-react';
-import { motion, useReducedMotion } from 'framer-motion';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { AnimatedSection } from './AnimatedSection';
 import { AnimatedCounter } from './AnimatedCounter';
 import { RouteTimeline } from './RouteTimeline';
@@ -78,7 +78,7 @@ export const ItineraryDisplay: React.FC<ItineraryDisplayProps> = ({
   const [showAllDays, setShowAllDays] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
   const [scheduleViewMode, setScheduleViewMode] = useState<'timeline' | 'grid'>('timeline');
-  const [isMapExpanded, setIsMapExpanded] = useState(true);
+  const [isMapExpanded, setIsMapExpanded] = useState(false);
 
   // Sharing states
   const [isSharing, setIsSharing] = useState(false);
@@ -659,41 +659,64 @@ export const ItineraryDisplay: React.FC<ItineraryDisplayProps> = ({
               onClick={() => setIsMapExpanded(!isMapExpanded)}
               className="text-xs font-semibold px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white/80 dark:bg-slate-800/80 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 transition-colors cursor-pointer flex items-center gap-1.5"
             >
-              <Navigation className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-              <span>{isMapExpanded ? 'Minimize Map' : 'Show Route Map'}</span>
+              {isMapExpanded ? (
+                <>
+                  <ChevronUp className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
+                  <span>Minimize</span>
+                </>
+              ) : (
+                <>
+                  <Navigation className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+                  <span>Show map</span>
+                </>
+              )}
             </button>
           </div>
         </div>
 
-        {isMapExpanded && (
-          <div className="space-y-4">
-            <InteractiveKarnatakaMap
-              currentPlan={plan}
-              onSelectDestination={(destName) => onOpenAiGuide(destName)}
-              height="480px"
-              className="shadow-inner"
-            />
-            <div className="flex items-center justify-between flex-wrap gap-2 pt-2 text-xs text-slate-500 dark:text-slate-400">
-              <div className="flex items-center gap-2 flex-wrap">
-                <span className="font-semibold text-slate-700 dark:text-slate-300">Route Waypoints:</span>
-                {plan.routeStops.map((stop, idx) => (
-                  <span
-                    key={stop}
-                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 border border-emerald-200/80 dark:border-emerald-800 text-[11px] font-medium"
-                  >
-                    <span className="w-4 h-4 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[9px] font-bold">
-                      {idx + 1}
+        <AnimatePresence initial={false}>
+          {isMapExpanded && (
+            <motion.div
+              key="itinerary-google-map"
+              initial={shouldReduceMotion ? { opacity: 1 } : { height: 0, opacity: 0 }}
+              animate={shouldReduceMotion ? { opacity: 1 } : { height: 'auto', opacity: 1 }}
+              exit={shouldReduceMotion ? { opacity: 0 } : { height: 0, opacity: 0 }}
+              transition={{ duration: shouldReduceMotion ? 0 : 0.35, ease: [0.22, 1, 0.36, 1] }}
+              className="overflow-hidden space-y-4 pt-1"
+            >
+              <InteractiveKarnatakaMap
+                currentPlan={plan}
+                onSelectDestination={(destName) => onOpenAiGuide(destName)}
+                height="480px"
+                className="shadow-inner"
+              />
+              <div className="flex items-center justify-between flex-wrap gap-2 pt-2 text-xs text-slate-500 dark:text-slate-400">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="font-semibold text-slate-700 dark:text-slate-300">Route Waypoints:</span>
+                  {plan.routeStops.map((stop, idx) => (
+                    <span
+                      key={stop}
+                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 border border-emerald-200/80 dark:border-emerald-800 text-[11px] font-medium"
+                    >
+                      <span className="w-4 h-4 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[9px] font-bold">
+                        {idx + 1}
+                      </span>
+                      <span>{stop}</span>
                     </span>
-                    <span>{stop}</span>
-                  </span>
-                ))}
+                  ))}
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setIsMapExpanded(false)}
+                  className="text-xs text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 flex items-center gap-1 font-medium cursor-pointer"
+                >
+                  <ChevronUp className="w-3.5 h-3.5" />
+                  <span>Minimize</span>
+                </button>
               </div>
-              <span className="text-[11px] text-slate-400 dark:text-slate-500 italic">
-                Tip: Click any marker pin to view local attractions and Kannada heritage notes.
-              </span>
-            </div>
-          </div>
-        )}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </motion.div>
 
       {/* Day by Day Itinerary */}

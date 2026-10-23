@@ -238,6 +238,7 @@ function RoutePolyline({ stops }: { stops: { lat: number; lng: number }[] }) {
 
 interface InteractiveKarnatakaMapProps {
   currentPlan?: ItineraryPlan | null;
+  selectedDestinations?: string[];
   onSelectDestination?: (destName: string) => void;
   className?: string;
   height?: string;
@@ -245,11 +246,14 @@ interface InteractiveKarnatakaMapProps {
 
 export const InteractiveKarnatakaMap: React.FC<InteractiveKarnatakaMapProps> = ({
   currentPlan,
+  selectedDestinations = [],
   onSelectDestination,
   className = '',
   height = '620px'
 }) => {
-  const [selectedFilter, setSelectedFilter] = useState<'all' | 'heritage' | 'coffee' | 'coastal' | 'wildlife'>('all');
+  const [selectedFilter, setSelectedFilter] = useState<'all' | 'selected' | 'heritage' | 'coffee' | 'coastal' | 'wildlife'>(
+    selectedDestinations.length > 0 && !currentPlan ? 'selected' : 'all'
+  );
   const [selectedDest, setSelectedDest] = useState<DestinationGeoPoint | null>(null);
   const [activeTabMode, setActiveTabMode] = useState<'destinations' | 'itinerary_route'>('destinations');
 
@@ -274,9 +278,15 @@ export const InteractiveKarnatakaMap: React.FC<InteractiveKarnatakaMapProps> = (
     if (activeTabMode === 'itinerary_route' && itineraryStops.length > 0) {
       return itineraryStops;
     }
+    if (selectedFilter === 'selected' && selectedDestinations && selectedDestinations.length > 0) {
+      const matched = KARNATAKA_GEO_DESTINATIONS.filter((d) =>
+        selectedDestinations.some(sd => sd.toLowerCase().includes(d.name.toLowerCase()) || d.name.toLowerCase().includes(sd.toLowerCase()))
+      );
+      return matched.length > 0 ? matched : KARNATAKA_GEO_DESTINATIONS;
+    }
     if (selectedFilter === 'all') return KARNATAKA_GEO_DESTINATIONS;
     return KARNATAKA_GEO_DESTINATIONS.filter((d) => d.category === selectedFilter);
-  }, [selectedFilter, activeTabMode, itineraryStops]);
+  }, [selectedFilter, activeTabMode, itineraryStops, selectedDestinations]);
 
   const activePointsForBounds = useMemo(() => {
     return filteredDestinations.map((d) => ({ lat: d.lat, lng: d.lng }));
@@ -331,6 +341,24 @@ export const InteractiveKarnatakaMap: React.FC<InteractiveKarnatakaMapProps> = (
             >
               <Navigation className="w-3.5 h-3.5" />
               <span>Itinerary Route ({currentPlan.durationDays} Days)</span>
+            </button>
+          )}
+
+          {selectedDestinations.length > 0 && (
+            <button
+              type="button"
+              onClick={() => {
+                setActiveTabMode('destinations');
+                setSelectedFilter('selected');
+              }}
+              className={`px-2.5 py-1.5 rounded-xl text-xs font-medium transition-colors cursor-pointer flex items-center gap-1.5 ${
+                activeTabMode === 'destinations' && selectedFilter === 'selected'
+                  ? 'bg-emerald-700 text-white font-semibold shadow-xs'
+                  : 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-900 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 hover:bg-emerald-100'
+              }`}
+            >
+              <Check className="w-3.5 h-3.5" />
+              <span>Selected ({selectedDestinations.length})</span>
             </button>
           )}
 

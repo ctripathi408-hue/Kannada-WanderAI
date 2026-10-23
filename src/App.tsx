@@ -28,7 +28,7 @@ import { onAuthStateChanged, User as FirebaseUser } from 'firebase/auth';
 export default function App() {
   const shouldReduceMotion = useReducedMotion();
   const [activeTab, setActiveTab] = useState<'planner' | 'itinerary' | 'map' | 'transit' | 'hotels' | 'circuits' | 'chatbot' | 'saved_trips'>('planner');
-  const [currentPlan, setCurrentPlan] = useState<ItineraryPlan | null>(CLASSIC_ITINERARIES[0]);
+  const [currentPlan, setCurrentPlan] = useState<ItineraryPlan | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [generationProgress, setGenerationProgress] = useState<string | null>(null);
   const [isReadOnlyShared, setIsReadOnlyShared] = useState(false);
@@ -377,6 +377,7 @@ export default function App() {
                 isLoading={isLoading}
                 progressMessage={generationProgress}
                 onSelectPrebuilt={handleSelectPrebuilt}
+                currentPlan={currentPlan}
               />
             )}
 
@@ -403,14 +404,24 @@ export default function App() {
                       onPlanYourOwnTrip={handlePlanYourOwnTrip}
                     />
                   ) : (
-                    <div className="text-center py-16 space-y-4">
-                      <p className="text-slate-600 font-medium">No itinerary selected yet.</p>
-                      <button
-                        onClick={() => setActiveTab('planner')}
-                        className="px-6 py-3 rounded-2xl bg-emerald-700 hover:bg-emerald-800 text-white font-semibold shadow-xs cursor-pointer"
-                      >
-                        Start Planning
-                      </button>
+                    <div className="glass-card rounded-3xl p-10 sm:p-14 text-center max-w-xl mx-auto my-8 space-y-4 border border-slate-200/80 dark:border-slate-800">
+                      <div className="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-emerald-950/70 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-400 flex items-center justify-center mx-auto shadow-xs">
+                        <Compass className="w-6 h-6" />
+                      </div>
+                      <h2 className="text-xl font-bold text-slate-900 dark:text-white font-heading">
+                        No Active Itinerary
+                      </h2>
+                      <p className="text-sm text-slate-600 dark:text-slate-300">
+                        Your plan will appear here once you choose a place.
+                      </p>
+                      <div className="pt-2">
+                        <button
+                          onClick={() => setActiveTab('planner')}
+                          className="px-6 py-3 rounded-2xl bg-emerald-700 hover:bg-emerald-800 text-white font-semibold shadow-xs cursor-pointer transition-colors"
+                        >
+                          Choose a Place
+                        </button>
+                      </div>
                     </div>
                   )
                 )}

@@ -197,333 +197,345 @@ export const ExtractedTripChips: React.FC<ExtractedTripChipsProps> = ({
 
         <div className="flex flex-wrap items-center gap-2.5">
           {/* Destination(s) Chip */}
-          <div className="relative">
-            <button
-              type="button"
-              onClick={() => setEditingField(editingField === 'destinations' ? null : 'destinations')}
-              className={`flex items-center gap-2 px-3.5 py-2 rounded-2xl text-xs font-semibold transition-all cursor-pointer border shadow-sm ${
-                editingField === 'destinations'
-                  ? 'bg-emerald-600 text-white border-emerald-400 ring-2 ring-emerald-400/30'
-                  : 'bg-emerald-950/80 hover:bg-emerald-900/90 text-emerald-200 border-emerald-500/40 hover:border-emerald-400'
-              }`}
-            >
-              <MapPin className="w-4 h-4 text-emerald-400" />
-              <span>Destinations:</span>
-              <span className="text-white font-bold bg-emerald-500/30 px-2 py-0.5 rounded-lg">
-                {details.destinations.join(', ')}
-              </span>
-              <Edit3 className="w-3 h-3 text-emerald-400 opacity-60 ml-0.5" />
-            </button>
+          {details.destinations && details.destinations.length > 0 && (
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setEditingField(editingField === 'destinations' ? null : 'destinations')}
+                className={`flex items-center gap-2 px-3.5 py-2 rounded-2xl text-xs font-semibold transition-all cursor-pointer border shadow-sm ${
+                  editingField === 'destinations'
+                    ? 'bg-emerald-600 text-white border-emerald-400 ring-2 ring-emerald-400/30'
+                    : 'bg-emerald-950/80 hover:bg-emerald-900/90 text-emerald-200 border-emerald-500/40 hover:border-emerald-400'
+                }`}
+              >
+                <MapPin className="w-4 h-4 text-emerald-400" />
+                <span>Destinations:</span>
+                <span className="text-white font-bold bg-emerald-500/30 px-2 py-0.5 rounded-lg">
+                  {details.destinations.join(', ')}
+                </span>
+                <Edit3 className="w-3 h-3 text-emerald-400 opacity-60 ml-0.5" />
+              </button>
 
-            {/* Destination Editor Popover */}
-            <AnimatePresence>
-              {editingField === 'destinations' && (
-                <motion.div
-                  initial={{ opacity: 0, y: 8, scale: 0.95 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: 8, scale: 0.95 }}
-                  className="absolute left-0 top-full mt-2 w-72 sm:w-80 bg-slate-900 border border-slate-700 rounded-2xl p-3 shadow-2xl z-50 space-y-2"
-                >
-                  <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider pb-1 border-b border-slate-800">
-                    Select Karnataka Destinations
-                  </div>
-                  <div className="flex flex-wrap gap-1.5 max-h-48 overflow-y-auto pt-1">
-                    {AVAILABLE_DESTINATIONS.map((city) => {
-                      const isSelected = details.destinations.includes(city);
-                      return (
-                        <button
-                          key={city}
-                          type="button"
-                          onClick={() => toggleDestination(city)}
-                          className={`px-2.5 py-1.5 rounded-xl text-xs font-medium transition-colors flex items-center gap-1.5 cursor-pointer ${
-                            isSelected
-                              ? 'bg-emerald-600 text-white font-semibold'
-                              : 'bg-slate-800 text-slate-300 hover:bg-slate-750'
-                          }`}
-                        >
-                          {isSelected && <Check className="w-3 h-3" />}
-                          <span>{city}</span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                  <div className="pt-2 border-t border-slate-800 flex justify-end">
-                    <button
-                      type="button"
-                      onClick={() => setEditingField(null)}
-                      className="px-3 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold cursor-pointer"
-                    >
-                      Done
-                    </button>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
+              {/* Destination Editor Popover */}
+              <AnimatePresence>
+                {editingField === 'destinations' && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 8, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 8, scale: 0.95 }}
+                    className="absolute left-0 top-full mt-2 w-72 sm:w-80 bg-slate-900 border border-slate-700 rounded-2xl p-3 shadow-2xl z-50 space-y-2"
+                  >
+                    <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider pb-1 border-b border-slate-800">
+                      Select Karnataka Destinations
+                    </div>
+                    <div className="flex flex-wrap gap-1.5 max-h-48 overflow-y-auto pt-1">
+                      {AVAILABLE_DESTINATIONS.map((city) => {
+                        const isSelected = details.destinations.includes(city);
+                        return (
+                          <button
+                            key={city}
+                            type="button"
+                            onClick={() => toggleDestination(city)}
+                            className={`px-2.5 py-1.5 rounded-xl text-xs font-medium transition-colors flex items-center gap-1.5 cursor-pointer ${
+                              isSelected
+                                ? 'bg-emerald-600 text-white font-semibold'
+                                : 'bg-slate-800 text-slate-300 hover:bg-slate-750'
+                            }`}
+                          >
+                            {isSelected && <Check className="w-3 h-3" />}
+                            <span>{city}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                    <div className="pt-2 border-t border-slate-800 flex justify-end">
+                      <button
+                        type="button"
+                        onClick={() => setEditingField(null)}
+                        className="px-3 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold cursor-pointer"
+                      >
+                        Done
+                      </button>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          )}
 
           {/* Duration Days Chip */}
-          <div className="relative">
-            <button
-              type="button"
-              onClick={() => setEditingField(editingField === 'days' ? null : 'days')}
-              className={`flex items-center gap-2 px-3.5 py-2 rounded-2xl text-xs font-semibold transition-all cursor-pointer border shadow-sm ${
-                editingField === 'days'
-                  ? 'bg-amber-600 text-white border-amber-400 ring-2 ring-amber-400/30'
-                  : 'bg-amber-950/80 hover:bg-amber-900/90 text-amber-200 border-amber-500/40 hover:border-amber-400'
-              }`}
-            >
-              <Calendar className="w-4 h-4 text-amber-400" />
-              <span>Duration:</span>
-              <span className="text-white font-bold bg-amber-500/30 px-2 py-0.5 rounded-lg">
-                {details.durationDays} {details.durationDays === 1 ? 'Day' : 'Days'}
-              </span>
-              <Edit3 className="w-3 h-3 text-amber-400 opacity-60 ml-0.5" />
-            </button>
+          {Boolean(details.durationDays && details.durationDays > 0) && (
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setEditingField(editingField === 'days' ? null : 'days')}
+                className={`flex items-center gap-2 px-3.5 py-2 rounded-2xl text-xs font-semibold transition-all cursor-pointer border shadow-sm ${
+                  editingField === 'days'
+                    ? 'bg-amber-600 text-white border-amber-400 ring-2 ring-amber-400/30'
+                    : 'bg-amber-950/80 hover:bg-amber-900/90 text-amber-200 border-amber-500/40 hover:border-amber-400'
+                }`}
+              >
+                <Calendar className="w-4 h-4 text-amber-400" />
+                <span>Duration:</span>
+                <span className="text-white font-bold bg-amber-500/30 px-2 py-0.5 rounded-lg">
+                  {details.durationDays} {details.durationDays === 1 ? 'Day' : 'Days'}
+                </span>
+                <Edit3 className="w-3 h-3 text-amber-400 opacity-60 ml-0.5" />
+              </button>
 
-            {/* Days Editor Popover */}
-            <AnimatePresence>
-              {editingField === 'days' && (
-                <motion.div
-                  initial={{ opacity: 0, y: 8, scale: 0.95 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: 8, scale: 0.95 }}
-                  className="absolute left-0 top-full mt-2 w-64 bg-slate-900 border border-slate-700 rounded-2xl p-3 shadow-2xl z-50 space-y-2"
-                >
-                  <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider pb-1 border-b border-slate-800">
-                    Trip Duration (Days)
-                  </div>
-                  <div className="grid grid-cols-4 gap-1.5 pt-1">
-                    {[1, 2, 3, 4, 5, 6, 7, 10].map((d) => (
+              {/* Days Editor Popover */}
+              <AnimatePresence>
+                {editingField === 'days' && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 8, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 8, scale: 0.95 }}
+                    className="absolute left-0 top-full mt-2 w-64 bg-slate-900 border border-slate-700 rounded-2xl p-3 shadow-2xl z-50 space-y-2"
+                  >
+                    <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider pb-1 border-b border-slate-800">
+                      Trip Duration (Days)
+                    </div>
+                    <div className="grid grid-cols-4 gap-1.5 pt-1">
+                      {[1, 2, 3, 4, 5, 6, 7, 10].map((d) => (
+                        <button
+                          key={d}
+                          type="button"
+                          onClick={() => setDuration(d)}
+                          className={`py-2 rounded-xl text-xs font-semibold text-center transition-colors cursor-pointer ${
+                            details.durationDays === d
+                              ? 'bg-amber-500 text-slate-950 font-bold'
+                              : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+                          }`}
+                        >
+                          {d} {d === 1 ? 'day' : 'days'}
+                        </button>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          )}
+
+          {/* Budget Tier Chip */}
+          {Boolean(details.budgetTier) && (
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setEditingField(editingField === 'budget' ? null : 'budget')}
+                className={`flex items-center gap-2 px-3.5 py-2 rounded-2xl text-xs font-semibold transition-all cursor-pointer border shadow-sm ${
+                  editingField === 'budget'
+                    ? 'bg-indigo-600 text-white border-indigo-400 ring-2 ring-indigo-400/30'
+                    : 'bg-indigo-950/80 hover:bg-indigo-900/90 text-indigo-200 border-indigo-500/40 hover:border-indigo-400'
+                }`}
+              >
+                <Wallet className="w-4 h-4 text-indigo-400" />
+                <span>Budget:</span>
+                <span className="text-white font-bold bg-indigo-500/30 px-2 py-0.5 rounded-lg uppercase text-[11px]">
+                  {details.budgetTier}
+                </span>
+                <Edit3 className="w-3 h-3 text-indigo-400 opacity-60 ml-0.5" />
+              </button>
+
+              {/* Budget Editor Popover */}
+              <AnimatePresence>
+                {editingField === 'budget' && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 8, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 8, scale: 0.95 }}
+                    className="absolute left-0 top-full mt-2 w-72 bg-slate-900 border border-slate-700 rounded-2xl p-3 shadow-2xl z-50 space-y-1.5"
+                  >
+                    <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider pb-1 border-b border-slate-800">
+                      Budget Tier
+                    </div>
+                    {(['budget', 'comfort', 'luxury'] as BudgetTier[]).map((tier) => (
                       <button
-                        key={d}
+                        key={tier}
                         type="button"
-                        onClick={() => setDuration(d)}
-                        className={`py-2 rounded-xl text-xs font-semibold text-center transition-colors cursor-pointer ${
-                          details.durationDays === d
-                            ? 'bg-amber-500 text-slate-950 font-bold'
+                        onClick={() => setBudget(tier)}
+                        className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs transition-colors cursor-pointer ${
+                          details.budgetTier === tier
+                            ? 'bg-indigo-600 text-white font-bold'
                             : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
                         }`}
                       >
-                        {d} {d === 1 ? 'day' : 'days'}
+                        <span className="capitalize">{tier}</span>
+                        <span className="text-[10px] opacity-80">
+                          {tier === 'budget' ? 'Under ₹3.5k/day' : tier === 'comfort' ? '₹4.5k – ₹8.5k' : '₹15k+ luxury'}
+                        </span>
                       </button>
                     ))}
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-
-          {/* Budget Tier Chip */}
-          <div className="relative">
-            <button
-              type="button"
-              onClick={() => setEditingField(editingField === 'budget' ? null : 'budget')}
-              className={`flex items-center gap-2 px-3.5 py-2 rounded-2xl text-xs font-semibold transition-all cursor-pointer border shadow-sm ${
-                editingField === 'budget'
-                  ? 'bg-indigo-600 text-white border-indigo-400 ring-2 ring-indigo-400/30'
-                  : 'bg-indigo-950/80 hover:bg-indigo-900/90 text-indigo-200 border-indigo-500/40 hover:border-indigo-400'
-              }`}
-            >
-              <Wallet className="w-4 h-4 text-indigo-400" />
-              <span>Budget:</span>
-              <span className="text-white font-bold bg-indigo-500/30 px-2 py-0.5 rounded-lg uppercase text-[11px]">
-                {details.budgetTier}
-              </span>
-              <Edit3 className="w-3 h-3 text-indigo-400 opacity-60 ml-0.5" />
-            </button>
-
-            {/* Budget Editor Popover */}
-            <AnimatePresence>
-              {editingField === 'budget' && (
-                <motion.div
-                  initial={{ opacity: 0, y: 8, scale: 0.95 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: 8, scale: 0.95 }}
-                  className="absolute left-0 top-full mt-2 w-72 bg-slate-900 border border-slate-700 rounded-2xl p-3 shadow-2xl z-50 space-y-1.5"
-                >
-                  <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider pb-1 border-b border-slate-800">
-                    Budget Tier
-                  </div>
-                  {(['budget', 'comfort', 'luxury'] as BudgetTier[]).map((tier) => (
-                    <button
-                      key={tier}
-                      type="button"
-                      onClick={() => setBudget(tier)}
-                      className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs transition-colors cursor-pointer ${
-                        details.budgetTier === tier
-                          ? 'bg-indigo-600 text-white font-bold'
-                          : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
-                      }`}
-                    >
-                      <span className="capitalize">{tier}</span>
-                      <span className="text-[10px] opacity-80">
-                        {tier === 'budget' ? 'Under ₹3.5k/day' : tier === 'comfort' ? '₹4.5k – ₹8.5k' : '₹15k+ luxury'}
-                      </span>
-                    </button>
-                  ))}
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          )}
 
           {/* Travel Style Chip */}
-          <div className="relative">
-            <button
-              type="button"
-              onClick={() => setEditingField(editingField === 'style' ? null : 'style')}
-              className={`flex items-center gap-2 px-3.5 py-2 rounded-2xl text-xs font-semibold transition-all cursor-pointer border shadow-sm ${
-                editingField === 'style'
-                  ? 'bg-rose-600 text-white border-rose-400 ring-2 ring-rose-400/30'
-                  : 'bg-rose-950/80 hover:bg-rose-900/90 text-rose-200 border-rose-500/40 hover:border-rose-400'
-              }`}
-            >
-              <Compass className="w-4 h-4 text-rose-400" />
-              <span>Style:</span>
-              <span className="text-white font-bold bg-rose-500/30 px-2 py-0.5 rounded-lg">
-                {details.travelStyleLabel}
-              </span>
-              <Edit3 className="w-3 h-3 text-rose-400 opacity-60 ml-0.5" />
-            </button>
+          {Boolean(details.travelStyleLabel) && (
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setEditingField(editingField === 'style' ? null : 'style')}
+                className={`flex items-center gap-2 px-3.5 py-2 rounded-2xl text-xs font-semibold transition-all cursor-pointer border shadow-sm ${
+                  editingField === 'style'
+                    ? 'bg-rose-600 text-white border-rose-400 ring-2 ring-rose-400/30'
+                    : 'bg-rose-950/80 hover:bg-rose-900/90 text-rose-200 border-rose-500/40 hover:border-rose-400'
+                }`}
+              >
+                <Compass className="w-4 h-4 text-rose-400" />
+                <span>Style:</span>
+                <span className="text-white font-bold bg-rose-500/30 px-2 py-0.5 rounded-lg">
+                  {details.travelStyleLabel}
+                </span>
+                <Edit3 className="w-3 h-3 text-rose-400 opacity-60 ml-0.5" />
+              </button>
 
-            {/* Travel Style Editor Popover */}
-            <AnimatePresence>
-              {editingField === 'style' && (
-                <motion.div
-                  initial={{ opacity: 0, y: 8, scale: 0.95 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: 8, scale: 0.95 }}
-                  className="absolute left-0 top-full mt-2 w-72 bg-slate-900 border border-slate-700 rounded-2xl p-3 shadow-2xl z-50 space-y-1.5"
-                >
-                  <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider pb-1 border-b border-slate-800">
-                    Travel Experience Style
-                  </div>
-                  {STYLE_OPTIONS.map((opt) => (
-                    <button
-                      key={opt.style}
-                      type="button"
-                      onClick={() => setStyle(opt.style, opt.label)}
-                      className={`w-full flex items-center gap-2 px-3 py-2 rounded-xl text-xs transition-colors cursor-pointer text-left ${
-                        details.travelStyle === opt.style
-                          ? 'bg-rose-600 text-white font-bold'
-                          : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
-                      }`}
-                    >
-                      <span>{opt.icon}</span>
-                      <span>{opt.label}</span>
-                    </button>
-                  ))}
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
+              {/* Travel Style Editor Popover */}
+              <AnimatePresence>
+                {editingField === 'style' && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 8, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 8, scale: 0.95 }}
+                    className="absolute left-0 top-full mt-2 w-72 bg-slate-900 border border-slate-700 rounded-2xl p-3 shadow-2xl z-50 space-y-1.5"
+                  >
+                    <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider pb-1 border-b border-slate-800">
+                      Travel Experience Style
+                    </div>
+                    {STYLE_OPTIONS.map((opt) => (
+                      <button
+                        key={opt.style}
+                        type="button"
+                        onClick={() => setStyle(opt.style, opt.label)}
+                        className={`w-full flex items-center gap-2 px-3 py-2 rounded-xl text-xs transition-colors cursor-pointer text-left ${
+                          details.travelStyle === opt.style
+                            ? 'bg-rose-600 text-white font-bold'
+                            : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+                        }`}
+                      >
+                        <span>{opt.icon}</span>
+                        <span>{opt.label}</span>
+                      </button>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          )}
 
           {/* Travelers Count Chip */}
-          <div className="relative">
-            <button
-              type="button"
-              onClick={() => setEditingField(editingField === 'travelers' ? null : 'travelers')}
-              className={`flex items-center gap-2 px-3.5 py-2 rounded-2xl text-xs font-semibold transition-all cursor-pointer border shadow-sm ${
-                editingField === 'travelers'
-                  ? 'bg-cyan-600 text-white border-cyan-400 ring-2 ring-cyan-400/30'
-                  : 'bg-cyan-950/80 hover:bg-cyan-900/90 text-cyan-200 border-cyan-500/40 hover:border-cyan-400'
-              }`}
-            >
-              <Users className="w-4 h-4 text-cyan-400" />
-              <span>Travelers:</span>
-              <span className="text-white font-bold bg-cyan-500/30 px-2 py-0.5 rounded-lg">
-                {details.travelersCount} {details.travelersCount === 1 ? 'Solo' : 'People'}
-              </span>
-              <Edit3 className="w-3 h-3 text-cyan-400 opacity-60 ml-0.5" />
-            </button>
+          {Boolean(details.travelersCount && details.travelersCount > 0) && (
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setEditingField(editingField === 'travelers' ? null : 'travelers')}
+                className={`flex items-center gap-2 px-3.5 py-2 rounded-2xl text-xs font-semibold transition-all cursor-pointer border shadow-sm ${
+                  editingField === 'travelers'
+                    ? 'bg-cyan-600 text-white border-cyan-400 ring-2 ring-cyan-400/30'
+                    : 'bg-cyan-950/80 hover:bg-cyan-900/90 text-cyan-200 border-cyan-500/40 hover:border-cyan-400'
+                }`}
+              >
+                <Users className="w-4 h-4 text-cyan-400" />
+                <span>Travelers:</span>
+                <span className="text-white font-bold bg-cyan-500/30 px-2 py-0.5 rounded-lg">
+                  {details.travelersCount} {details.travelersCount === 1 ? 'Solo' : 'People'}
+                </span>
+                <Edit3 className="w-3 h-3 text-cyan-400 opacity-60 ml-0.5" />
+              </button>
 
-            {/* Travelers Editor Popover */}
-            <AnimatePresence>
-              {editingField === 'travelers' && (
-                <motion.div
-                  initial={{ opacity: 0, y: 8, scale: 0.95 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: 8, scale: 0.95 }}
-                  className="absolute left-0 top-full mt-2 w-64 bg-slate-900 border border-slate-700 rounded-2xl p-3 shadow-2xl z-50 space-y-1.5"
-                >
-                  <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider pb-1 border-b border-slate-800">
-                    Number of Travelers
-                  </div>
-                  {[
-                    { count: 1, label: '1 (Solo Traveler)' },
-                    { count: 2, label: '2 (Couple / Duo)' },
-                    { count: 3, label: '3 (Small Group / Family)' },
-                    { count: 4, label: '4 (Family / Friends)' },
-                    { count: 6, label: '6+ (Group Expedition)' }
-                  ].map((item) => (
-                    <button
-                      key={item.count}
-                      type="button"
-                      onClick={() => setTravelers(item.count)}
-                      className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs transition-colors cursor-pointer ${
-                        details.travelersCount === item.count
-                          ? 'bg-cyan-600 text-white font-bold'
-                          : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
-                      }`}
-                    >
-                      <span>{item.label}</span>
-                      {details.travelersCount === item.count && <Check className="w-3.5 h-3.5" />}
-                    </button>
-                  ))}
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
+              {/* Travelers Editor Popover */}
+              <AnimatePresence>
+                {editingField === 'travelers' && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 8, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 8, scale: 0.95 }}
+                    className="absolute left-0 top-full mt-2 w-64 bg-slate-900 border border-slate-700 rounded-2xl p-3 shadow-2xl z-50 space-y-1.5"
+                  >
+                    <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider pb-1 border-b border-slate-800">
+                      Number of Travelers
+                    </div>
+                    {[
+                      { count: 1, label: '1 (Solo Traveler)' },
+                      { count: 2, label: '2 (Couple / Duo)' },
+                      { count: 3, label: '3 (Small Group / Family)' },
+                      { count: 4, label: '4 (Family / Friends)' },
+                      { count: 6, label: '6+ (Group Expedition)' }
+                    ].map((item) => (
+                      <button
+                        key={item.count}
+                        type="button"
+                        onClick={() => setTravelers(item.count)}
+                        className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs transition-colors cursor-pointer ${
+                          details.travelersCount === item.count
+                            ? 'bg-cyan-600 text-white font-bold'
+                            : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+                        }`}
+                      >
+                        <span>{item.label}</span>
+                        {details.travelersCount === item.count && <Check className="w-3.5 h-3.5" />}
+                      </button>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          )}
 
           {/* Starting City Chip */}
-          <div className="relative">
-            <button
-              type="button"
-              onClick={() => setEditingField(editingField === 'startCity' ? null : 'startCity')}
-              className={`flex items-center gap-2 px-3.5 py-2 rounded-2xl text-xs font-semibold transition-all cursor-pointer border shadow-sm ${
-                editingField === 'startCity'
-                  ? 'bg-teal-600 text-white border-teal-400 ring-2 ring-teal-400/30'
-                  : 'bg-teal-950/80 hover:bg-teal-900/90 text-teal-200 border-teal-500/40 hover:border-teal-400'
-              }`}
-            >
-              <Car className="w-4 h-4 text-teal-400" />
-              <span>Depart:</span>
-              <span className="text-white font-bold bg-teal-500/30 px-2 py-0.5 rounded-lg">
-                {details.startingCity}
-              </span>
-              <Edit3 className="w-3 h-3 text-teal-400 opacity-60 ml-0.5" />
-            </button>
+          {Boolean(details.startingCity && details.startingCity !== '') && (
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setEditingField(editingField === 'startCity' ? null : 'startCity')}
+                className={`flex items-center gap-2 px-3.5 py-2 rounded-2xl text-xs font-semibold transition-all cursor-pointer border shadow-sm ${
+                  editingField === 'startCity'
+                    ? 'bg-teal-600 text-white border-teal-400 ring-2 ring-teal-400/30'
+                    : 'bg-teal-950/80 hover:bg-teal-900/90 text-teal-200 border-teal-500/40 hover:border-teal-400'
+                }`}
+              >
+                <Car className="w-4 h-4 text-teal-400" />
+                <span>Depart:</span>
+                <span className="text-white font-bold bg-teal-500/30 px-2 py-0.5 rounded-lg">
+                  {details.startingCity}
+                </span>
+                <Edit3 className="w-3 h-3 text-teal-400 opacity-60 ml-0.5" />
+              </button>
 
-            {/* Starting City Editor Popover */}
-            <AnimatePresence>
-              {editingField === 'startCity' && (
-                <motion.div
-                  initial={{ opacity: 0, y: 8, scale: 0.95 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: 8, scale: 0.95 }}
-                  className="absolute left-0 top-full mt-2 w-56 bg-slate-900 border border-slate-700 rounded-2xl p-3 shadow-2xl z-50 space-y-1.5"
-                >
-                  <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider pb-1 border-b border-slate-800">
-                    Starting Location
-                  </div>
-                  {STARTING_CITIES.map((c) => (
-                    <button
-                      key={c}
-                      type="button"
-                      onClick={() => setStartingCity(c)}
-                      className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs transition-colors cursor-pointer ${
-                        details.startingCity === c
-                          ? 'bg-teal-600 text-white font-bold'
-                          : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
-                      }`}
-                    >
-                      <span>{c}</span>
-                      {details.startingCity === c && <Check className="w-3.5 h-3.5" />}
-                    </button>
-                  ))}
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
+              {/* Starting City Editor Popover */}
+              <AnimatePresence>
+                {editingField === 'startCity' && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 8, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 8, scale: 0.95 }}
+                    className="absolute left-0 top-full mt-2 w-56 bg-slate-900 border border-slate-700 rounded-2xl p-3 shadow-2xl z-50 space-y-1.5"
+                  >
+                    <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider pb-1 border-b border-slate-800">
+                      Starting Location
+                    </div>
+                    {STARTING_CITIES.map((c) => (
+                      <button
+                        key={c}
+                        type="button"
+                        onClick={() => setStartingCity(c)}
+                        className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs transition-colors cursor-pointer ${
+                          details.startingCity === c
+                            ? 'bg-teal-600 text-white font-bold'
+                            : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+                        }`}
+                      >
+                        <span>{c}</span>
+                        {details.startingCity === c && <Check className="w-3.5 h-3.5" />}
+                      </button>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          )}
         </div>
       </div>
 
