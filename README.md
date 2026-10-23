@@ -4,7 +4,7 @@
 
 🔗 **Live demo:** https://karnataka-wanderai-personalized-travel-transit-pl.ai.studio/
 
-TEST CREDENTIALS -testcredentials330@gmail.com
+TEST CREDENTIALS- testcredentials330@gmail.com
 password-Test@1234
 
 
